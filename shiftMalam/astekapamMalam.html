@@ -9,12 +9,12 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 10px;
-        background: #f4f6f8;
+        background: #000000;
       }
       .container {
         max-width: 100%;
         margin: 0 auto;
-        background: #ffffff;
+        background: #979797;
         padding: 15px;
         border-radius: 8px;
       }
@@ -80,17 +80,20 @@
       #copyButton:hover {
         background-color: #218838;
       }
-      pre {
-        background: #f8f9fa;
-        color: #333;
+      #output {
+        width: 100%;
+        min-height: 600px; /* Ubah dari 400px ke 600px atau lebih */
         padding: 15px;
-        white-space: pre-wrap;
+        border: 1px solid #ccc;
         border-radius: 6px;
-        margin-top: 10px; /* Kurangi sedikit margin atas karena ada tombol */
-        border: 1px solid #eee;
-        overflow-x: auto;
-        font-size: 0.9em;
-        line-height: 1.4;
+        font-family: monospace;
+        font-size: 0.95em;
+        line-height: 1.5;
+        resize: vertical;
+        box-sizing: border-box;
+        background-color: #f8f9fa;
+        margin-top: 10px;
+        white-space: pre-wrap;
       }
       .section {
         margin-top: 20px;
@@ -157,10 +160,6 @@
         textarea,
         button {
           font-size: 0.95em;
-        }
-        pre {
-          font-size: 0.8em;
-          padding: 10px;
         }
       }
     </style>
@@ -468,7 +467,7 @@ Sdr. Rafi, Sdr. Adib, Sdr. Ario</textarea
 
       <button onclick="generateLaporan()">Generate Laporan</button>
 
-      <pre id="output"></pre>
+      <textarea id="output"></textarea>
 
       <!-- Container untuk tombol copy -->
       <div class="copy-button-container">
