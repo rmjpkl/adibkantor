@@ -1,833 +1,923 @@
-<HTML lang="en" data-bs-theme="dark">
-    <head>
-        <title>ASTEKPAM MALAM</title>
-        <meta charset="UTF-8" />
-         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
-      rel="stylesheet"
-    />
-    
-        <style type="text/css">
-            #send_form {
-                color: #fff;
-                background: #4e4e4e;
-                text-decoration: none;
-                display: inline-block;
-                padding: 10px 25px;
-                border-radius: .3rem;
-                font-weight: 700;
-                letter-spacing: .5px;
-                font-size: 15px;
-                float: right; 
-            }
-            
-            body {
-                background-color: #000;
-                color: #fff;
-            } 
-        </style>
-        <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-            <!-- untuk auto complate -->
-            <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-            <link rel="stylesheet" href="/resources/demos/style.css">
-            <script src="https://code.jquery.com/jquery-3.6.0.js"></script> 
-            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-            <!-- untuk auto complate -->
-
-    </head>
-    
-    <div class="container-sm">
-           <body>
-            <h1>ASTEKPAM MALAM</h1>
-            <form>
-                
-                <fieldset class="form-group border p-3">
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Pilih Tanggal</label>
-                        <input type="text" class="form-control" id="tanggal" name="tanggal" placeholder="klik unutk memilih tanggal">
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.id.min.js"></script>
-                        <script>
-                            $(document).ready(function(){
-                            $('#tanggal').datepicker({
-                                format: 'DD , dd M yyyy',
-                                language: 'id', 
-                                autoclose: true
-                            }); 
-                            $('#tanggal').datepicker('setDate', new Date())                      
-                            });
-                        </script>
-                    </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Dari Rupam</label>
-                    <select class="form-control"name="dariRupam" id="dariRupam">
-                        <option value=" ">Pilih Rupam</option>
-                        <option value="Rupam 1">Rupam 1</option>
-                        <option value="Rupam 2">Rupam 2</option>
-                        <option value="Rupam 3">Rupam 3</option>
-                        <option value="Rupam 4">Rupam 4</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Kepada Rupam </label>
-                    <select class="form-control"name="kepadaRupam" id="kepadaRupam">
-                        <option value=" ">Pilih Rupam</option>
-                        <option value="Rupam 1">Rupam 1</option>
-                        <option value="Rupam 2">Rupam 2</option>
-                        <option value="Rupam 3">Rupam 3</option>
-                        <option value="Rupam 4">Rupam 4</option>
-                    </select>
-                </div>
-                </fieldset>
-
-                <br/>
-
-
-
-
-                <script>
-                    // mengambil nilai dari spreadsheet
-                    async function getData() {
-                    const spreadsheetId = '1TmJofZ5Q5WcsqwAL6xYmKR1rOuUiyH4eXl4ANzEaeIY'
-                    const apiKey = 'AIzaSyD8yvaiWF3p4ohg2040C4xrwMDqc_cfiI0';
-                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/?key=${apiKey}&includeGridData=true`;
-                    const result = await fetch(url)
-                    const { sheets } = await result.json();
-                    const firstSheet = sheets[0];
-                    const data = firstSheet.data[0].rowData
-                        .filter((_, index) => index !== 0) // Mulai dari index 1 (menghindari nama kolom)
-                        .map(row => {
-                            const { values } = row;
-                            return {
-                                satu: values[0].formattedValue,
-                                dua: values[1].formattedValue,
-                                tiga: values[2].formattedValue,
-                                empat: values[3].formattedValue,
-                                lima: values[4].formattedValue,
-                                enam: values[5].formattedValue,
-                                tujuh: values[6].formattedValue,
-                            }
-                        })
-                    return data;
-                    }
-                 
-                </script>
-
-
-
-
-                <fieldset class="form-group border p-3">
-                    
-                    <legend >Di Dalam Lapas</legend>
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Tahanan</label>
-                    <input type="number" class="form-control" id="jumlahTahanan" required="" placeholder="Jumlah Tahanan">
-                    <script>
-                        async function displayData() {
-                        const data = await getData();
-                        const inputValue = document.getElementById('jumlahTahanan');
-                        inputValue.value = data[0].lima; 
-                        }
-                        displayData();
-                  </script>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Narapidana</label>
-                    <input type="number" class="form-control" id="jumlahNarapidana" required="" placeholder="Jumlah Narapidana" onkeyup="getjumlah()">
-                    <script>
-                        async function displayData() {
-                        const data = await getData();
-                        const inputValue = document.getElementById('jumlahNarapidana');
-                        inputValue.value = data[0].enam; 
-                        }
-                        displayData();
-                  </script>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Total Didalam </label>
-                    <input type="number" class="form-control" id="totalDidalam" required="" placeholder="Total Didalam">
-
-                    <script>
-                        async function displayData() {
-                        const data = await getData();
-                        const inputValue = document.getElementById('totalDidalam');
-                        inputValue.value = data[0].tujuh; 
-                        }
-                        displayData();
-                  </script>
-
-                    <script>
-                        function getjumlah ()
-                        {
-                         //deklarasi variable
-                         var hasil;
-                         var input1;
-                         var input2;
-                         //input
-                         input1 = parseInt(document .
-                         getElementById("jumlahTahanan").
-                         value);
-                       
-                         input2 = parseInt(document .
-                         getElementById("jumlahNarapidana").
-                         value);
-                         //proses
-                         hasil = input1 + input2;
-                         //output
-                         document.getElementById("totalDidalam") .value = hasil;
-                        }
-                    </script>
-
-                </div>
-            </fieldset>
-            <br/>  
-            
-            <fieldset class="form-group border p-3">
-                <legend >Di Luar Lapas</legend>
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Tahanan </label>
-                    <input type="number" class="form-control" id="jumlahTahananDiluar" value="0" required="" placeholder="Jumlah Tahanan Diluar">
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Narapidana </label>
-                    <input type="number" class="form-control" id="jumlahNarapidanaDiluar" value="0" required="" placeholder="Jumlah Narapidana Diluar" onkeyup="getjumlahb()" >
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Total Diluar </label>
-                    <input type="number" class="form-control" id="totalDiluar" required="" value="0" placeholder="Total Diluar"  >
-
-                    <script>
-                        function getjumlahb ()
-                        {
-                         //deklarasi variable
-                         var hasilb;
-                         var input1b;
-                         var input2b;
-                         //input
-                         input1b = parseInt(document .
-                         getElementById("jumlahTahananDiluar").
-                         value);
-                       
-                         input2b = parseInt(document .
-                         getElementById("jumlahNarapidanaDiluar").
-                         value);
-                         //proses
-                         hasilb = input1b + input2b;
-                         //output
-                         document.getElementById("totalDiluar") .value = hasilb;
-                        }
-                       </script>
-
-                </div>
-              </fieldset> <br/>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Keseluruhan</label>
-                    <input type="number" class="form-control" id="grandTotal" required="" placeholder="Jumlah Keseluruhan" OnClick="getjumlahSeluruh()" >
-
-                    <script>
-                        async function displayData() {
-                        const data = await getData();
-                        const inputValue = document.getElementById('grandTotal');
-                        inputValue.value = data[0].tujuh; 
-                        }
-                        displayData();
-                  </script>
-
-                    <script>
-                        function getjumlahSeluruh ()
-                        {
-                         //deklarasi variable
-                         var hasilSeluruh;
-                         var input1Seluruh;
-                         var input2Seluruh;
-                         //input
-                         input1Seluruh = parseInt(document .
-                         getElementById("totalDidalam").
-                         value);
-                       
-                         input2Seluruh = parseInt(document .
-                         getElementById("totalDiluar").
-                         value);
-                         //proses
-                         hasilSeluruh = input1Seluruh + input2Seluruh;
-                         //output
-                         document.getElementById("grandTotal") .value = hasilSeluruh;
-                        }
-                       </script>
-                </div>
-                
-        
-                            
-                <br/> <fieldset class="form-group border p-3">
-                <legend >Data Personil</legend>
-                <div class="mb-3">
-                    <label class="form-label">Jumlah Rupam </label>
-                    <input type="number" class="form-control" id="jumlahRupam" required="" placeholder="Jumlah Rupam">
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">P2U</label>
-                    <input type="number" class="form-control" id="P2U" required="" placeholder="Jumlah P2U" onkeyup="getTotalRupam()">
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Total Rupam </label>
-                    <input type="number" class="form-control" id="totalRupam" required="" placeholder="Total Rupam">
-
-                    <script>
-                        function getTotalRupam ()
-                        {
-                         //deklarasi variable
-                         var hasilTotalRupam;
-                         var inputJumlahRupam;
-                         var inputP2U;
-                         //input
-                         inputJumlahRupam = parseInt(document .
-                         getElementById("jumlahRupam").
-                         value);
-                       
-                         inputP2U = parseInt(document .
-                         getElementById("P2U").
-                         value);
-                         //proses
-                         hasilTotalRupam = inputJumlahRupam + inputP2U;
-                         //output
-                         document.getElementById("totalRupam") .value = hasilTotalRupam;
-                        }
-                    </script>
-
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Kehadiran Rupam </label>
-                    <input type="number" class="form-control" id="kehadiranRupam" required="" placeholder="Kehadiran Rupam" onkeyup="getKeterangan()">
-                </div>
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Keterangan Rupam </label>
-                    <input type="text" class="form-control" id="keteranganRupam" required="" placeholder="Keterangan Rupam">
-
-                    <script>
-                        function getKeterangan ()
-                        {
-                         //deklarasi variable
-                         var HasilKeteranganRupam;
-                         var inputTotalRupam;
-                         var inputKehadiranRupam;
-                         //input
-                         inputTotalRupam = parseInt(document .
-                         getElementById("totalRupam").
-                         value);
-                       
-                         inputKehadiranRupam = parseInt(document .
-                         getElementById("kehadiranRupam").
-                         value);
-                         //proses
-                         if (inputTotalRupam == inputKehadiranRupam){
-                            document.getElementById("keteranganRupam") .value = "Personil Hadir Lengkap";  
-                         }else{
-                            document.getElementById("keteranganRupam") .value = "";
-                         }
-                         //output
-                         
-                        }
-                    </script>
-                </div>
-            </fieldset> 
-
-            
-            <br/> <fieldset class="form-group border p-3">
-                <legend >PEMBAGIAN TUGAS</legend>
-
-                <div class="mb-3">
-                    <label class="form-label">Ka.Rupam</label>
-                    <input type="text" class="form-control" id="KaRupam" required="" placeholder="Ka.Rupam">
-
-                    <script>
-                        document.getElementById('kepadaRupam').addEventListener('change', function() {
-                        let selectedValue = this.value;
-                        let result = '';
-
-                        switch(selectedValue) {
-                            case 'Rupam 1':
-                                result = 'Dodi Septiyanto';
-                                break;
-                            case 'Rupam 2':
-                                result = 'Maryoto';
-                                break;
-                            case 'Rupam 3':
-                                result = 'Wahana';
-                                break;
-                            case 'Rupam 4':
-                                result = 'Edy Suparyono';
-                                break;
-                        }
-
-                        document.getElementById("KaRupam") .value = result;
-                    });
-
-                    </script>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Waka.Rupam </label>
-                    <input type="text" class="form-control" id="WakaRupam" required="" placeholder="Waka.Rupam">
-
-                    <script>
-                        document.getElementById('kepadaRupam').addEventListener('change', function() {
-                        let selectedValue = this.value;
-                        let result = '';
-
-                        switch(selectedValue) {
-                            case 'Rupam 1':
-                                result = 'Joko Purwoko';
-                                break;
-                            case 'Rupam 2':
-                                result = 'Widodo';
-                                break;
-                            case 'Rupam 3':
-                                result = 'Mono Puswanto';
-                                break;
-                            case 'Rupam 4':
-                                result = 'Imam Fauzi';
-                                break;
-                        }
-
-                        document.getElementById("WakaRupam") .value = result;
-                    });
-
-                    </script>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">P2U</label>
-                    <input type="text" class="form-control" id="P2Utugas"  placeholder="Petugas P2U" >
-
-                    <script>
-                        document.getElementById('kepadaRupam').addEventListener('change', function() {
-                        let selectedValue = this.value;
-                        let result = '';
-
-                        switch(selectedValue) {
-                            case 'Rupam 1':
-                                result = 'Ali Mashadi';
-                                break;
-                            case 'Rupam 2':
-                                result = 'Tirta Aji Kumbara';
-                                break;
-                            case 'Rupam 3':
-                                result = 'M. Ashidiqi';
-                                break;
-                            case 'Rupam 4':
-                                result = 'Dody Sam Yusuf';
-                                break;
-                        }
-
-                        document.getElementById("P2Utugas") .value = result;
-                    });
-
-                    </script>
-                    
-                </div>
-
-                
-                
-                
-                <div class="mb-3">
-                    <label class="form-label">Pos Menara 1</label>
-                    <textarea class="form-control" id="Menara1" name="Menara1" placeholder="Petugas Pos Menara 1" ></textarea>                               
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Pos Menara 3</label>
-                    <textarea class="form-control" id="Menara3" required="" placeholder="Petugas Pos Menara 3"></textarea>  
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Pos Blok B & C</label>
-                    <textarea class="form-control" id="BlokBC" required="" placeholder="Petugas Pos Blok B & C"></textarea>  
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Pos Blok D, E & F</label>
-                    <textarea class="form-control" id="BlokDEF" required="" placeholder="Petugas Pos Blok D, E & F"></textarea>  
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Wasrik</label>
-                    <textarea class="form-control" id="Wasrik" required="" placeholder="Petugas Warik"></textarea>  
-                </div>
-
-
-                <di>
-                    <label class="form-label">Pengawas Umum</label>
-                    <input type="text" class="form-control" id="pengawasUmum"  >
-                    <script>
-                        $(  function() {
-                          var availableTags = [
-                            "FANNY YUSUF.I,ST.",
-                            "RINGGA RAHMANTO,S.Psi",
-                            "DHONI ARIB S,Amd.IP.,S.H.",
-                            "CENDY, Amd.IP.,S.H.,M.H"
-                          ];
-                          $( "#pengawasUmum" ).autocomplete({
-                            source: availableTags
-                          });
-                        } );
-                    </script>
-
-                </di>
-
-                <div>
-                    <label class="form-label">Piket Perwira</label>
-                    <input type="text" class="form-control" id="piketPerwira">
-                    <script>
-                        $(  function() {
-                          var availableTags = [
-                            "WINDU ARI AGUNG, S.H.",
-                            "INDARTO ADIPUTRA, S.H",
-                            "AMIN AUNUR ROFIQ, S.P",
-                            "ARDHYAN BANGUN.R, S.H",
-                            "RIZAL EKA P M, S.H.",
-                            "DESDY PURWANTO"
-                          ];
-                          $( "#piketPerwira" ).autocomplete({
-                            source: availableTags
-                          });
-                        } );
-                    </script>
-                 </div>
-
-                <div> 
-                    <label class="form-label">Piket Staf</label>
-                    <input type="text" class="form-control" id="piketStaf">
-                    <script>
-                        $(  function() {
-                          var availableTags = [
-                            "ANGGIT FEBIANTO",
-                            "CAPUTRA",
-                            "DAFFA BAGOS MARSEKAL",
-                            "DODY SAM YUSUF",
-                            "HENDRA SURYA A.G",
-                            "IFAL KHOIRIL",
-                            "LAFRAN DWI WIJAYANTO",
-                            "M FAHMI MAULANA",
-                            "M. ADITYA NUGRATAMA",
-                            "M. IRFAN NUDDIN",
-                            "M. RAFI",
-                            "MUH. ADE PURWADI",
-                            "NUUR SIDIQ PERMANA",
-                            "PRIAMBODO",
-                            "SOFYAN ALI",
-                            "SULIZ APRIZAL",
-                            "ZIHAN SENDIKO.P"
-                          ];
-                          $( "#piketStaf" ).autocomplete({
-                            source: availableTags
-                          });
-                        } );
-                    </script>
-                </div>
-
-               
-                
-                
-                <script>
-                        async function displayData() {
-                        const data = await getData();
-                        const inputPengawasUmum = document.getElementById('pengawasUmum');
-                        inputPengawasUmum.value = data[0].dua; 
-                        }
-                        displayData();
-
-                  </script>
-
-
-
-                <script>
-                    async function displayData() {
-                        const data = await getData();
-                        const inputPiketPerwira = document.getElementById('piketPerwira');
-                        inputPiketPerwira.value = data[0].tiga; 
-                        }
-                        displayData();
-                </script>
-
-
-
-                <script>
-                   async function displayData() {
-                        const data = await getData();
-                        const inputPiketStaf = document.getElementById('piketStaf');
-                        inputPiketStaf.value = data[0].empat; 
-                        }
-                        displayData();
-                </script>
-
-               </fieldset>
-                
-               <br/>
-               <fieldset class="form-group border p-3">
-                <legend >Inventaris</legend>
-                <div class="mb-3">
-                    <label class="form-label">Pistol</label>
-                    <input type="number" class="form-control" id="pistol" value="2" required="" placeholder="Pistol">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Peluru</label>
-                    <input type="number" class="form-control" id="peluru" value="18" required="" placeholder="Peluru">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Magazine</label>
-                    <input type="number" class="form-control" id="magezine" value="4" required="" placeholder="Magazine">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">HT</label>
-                    <input type="number" class="form-control" id="HT" value="6" required="" placeholder="HT">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Tongkat PHH</label>
-                    <input type="number" class="form-control" id="tongkatPHH" value="3" required="" placeholder="Tongkat PHH">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Metal Detector</label>
-                    <input type="number" class="form-control" id="metalDetector" value="2" required="" placeholder="Metal Detector">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">APAR</label>
-                    <input type="number" class="form-control" id="apar" value="2" required="" placeholder="APAR">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Mejad / Kursi</label>
-                    <input type="number" class="form-control" id="mejaKursi" value="2" required="" placeholder="Mejad / Kursi">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Payung</label>
-                    <input type="number" class="form-control" id="payung" value="4" required="" placeholder="Payung">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Jas Hujan </label>
-                    <input type="number" class="form-control" id="jasHujan" value="4" required="" placeholder="Jas Hujan">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Senter</label>
-                    <input type="number" class="form-control" id="senter" value="4" required="" placeholder="Senter">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Speaker TOA</label>
-                    <input type="number" class="form-control" id="speakerTOA" value="1" required="" placeholder="Speaker TOA">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Lonceng</label>
-                    <input type="number" class="form-control" id="lonceng" value="4" required="" placeholder="Lonceng">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Sepatu Boot</label>
-                    <input type="number" class="form-control" id="sepatuBoot" value="3" required="" placeholder="Sepatu Boot">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Pepper Spray</label>
-                    <input type="number" class="form-control" id="pepperSpray" value="7" required="" placeholder="Pepper Spray">
-                </div>   
-                  </fieldset>   <br/>             
-    
-                  <a class="send_form" id="send_form" href="javascript:void" type="submit" title="Send to Whatsapp"> <i class="fa fa-paper-plane"></i>  Kirim</a>
- 
-            </form>
-            <br><br>
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan Astekpam Malam</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 10px;
+        background: #f4f6f8;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      h2 {
+        text-align: center;
+        font-size: 1.4em;
+      }
+      h3 {
+        font-size: 1.2em;
+        margin-top: 20px;
+      }
+      h4 {
+        font-size: 1.1em;
+        margin-top: 15px;
+      }
+      .mb-3 {
+        margin-bottom: 12px;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.9em;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 1em;
+      }
+      button {
+        padding: 12px 20px;
+        margin-top: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1em;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      /* Tombol Copy */
+      .copy-button-container {
+        text-align: right; /* Untuk meratakan tombol ke kanan */
+        margin-top: 10px;
+      }
+      #copyButton {
+        background-color: #28a745; /* Warna hijau untuk kontras */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 15px;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
+      #copyButton:hover {
+        background-color: #218838;
+      }
+      pre {
+        background: #f8f9fa;
+        color: #333;
+        padding: 15px;
+        white-space: pre-wrap;
+        border-radius: 6px;
+        margin-top: 10px; /* Kurangi sedikit margin atas karena ada tombol */
+        border: 1px solid #eee;
+        overflow-x: auto;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+      .section {
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+      .col {
+        flex: 1;
+      }
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #d4d4d4;
+        font-size: 0.9em;
+      }
+      .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+      }
+      .autocomplete-active {
+        background-color: #28a745 !important;
+        color: #ffffff;
+      }
+      .input-container {
+        position: relative;
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 5px;
+        }
+        .container {
+          padding: 10px;
+        }
+        .row {
+          flex-direction: column;
+        }
+        h2 {
+          font-size: 1.3em;
+        }
+        h3 {
+          font-size: 1.1em;
+        }
+        label {
+          font-size: 0.85em;
+        }
+        input,
+        select,
+        textarea,
+        button {
+          font-size: 0.95em;
+        }
+        pre {
+          font-size: 0.8em;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>FORM LAPORAN ASTEKPAM MALAM</h2>
+
+      <!-- TANGGAL -->
+      <div class="mb-3">
+        <label for="tanggal">Tanggal</label>
+        <input type="date" id="tanggal" />
+      </div>
+
+      <!-- RUPAM -->
+      <div class="row">
+        <div class="col mb-3">
+          <label for="darirupam">Dari Rupam</label>
+          <select id="darirupam">
+            <option value="Rupam I">Rupam I</option>
+            <option value="Rupam II">Rupam II</option>
+            <option value="Rupam III">Rupam III</option>
+            <option value="Rupam IV" selected>Rupam IV</option>
+          </select>
+        </div>
+        <div class="col mb-3">
+          <label for="kerupam">Ke Rupam</label>
+          <select id="kerupam" onchange="updatePersonilFromRupam()">
+            <option value="Rupam I">Rupam I</option>
+            <option value="Rupam II" selected>Rupam II</option>
+            <option value="Rupam III">Rupam III</option>
+            <option value="Rupam IV">Rupam IV</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- JUMLAH PENGHUNI -->
+      <h3>A. Jumlah Penghuni</h3>
+
+      <div class="mb-3">
+        <label for="tahananDalam">Tahanan di Dalam Lapas</label>
+        <input
+          type="number"
+          id="tahananDalam"
+          value="82"
+          oninput="updateTotalPenghuni()"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="napiDalam">Narapidana di Dalam Lapas</label>
+        <input
+          type="number"
+          id="napiDalam"
+          value="403"
+          oninput="updateTotalPenghuni()"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="jumlahDalamLapas">Jumlah Di Dalam Lapas (Otomatis)</label>
+        <input type="number" id="jumlahDalamLapas" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label for="tahananLuar">Tahanan di Luar Lapas</label>
+        <input
+          type="number"
+          id="tahananLuar"
+          value="0"
+          oninput="updateTotalPenghuni()"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="napiLuar">Narapidana di Luar Lapas</label>
+        <input
+          type="number"
+          id="napiLuar"
+          value="0"
+          oninput="updateTotalPenghuni()"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="jumlahDiLuarLapas">Jumlah Di Luar Lapas (Otomatis)</label>
+        <input type="number" id="jumlahDiLuarLapas" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label for="totalPenghuni">Total Penghuni (Otomatis)</label>
+        <input type="number" id="totalPenghuni" readonly />
+      </div>
+
+      <!-- PERSONIL -->
+      <h3>B. Personil Pengamanan</h3>
+
+      <div class="mb-3">
+        <label for="rupam">Rupam</label>
+        <input type="number" id="rupam" value="5" oninput="updatePersonil()" />
+      </div>
+
+      <div class="mb-3">
+        <label for="p2u">P2U</label>
+        <input type="number" id="p2u" value="2" oninput="updatePersonil()" />
+      </div>
+
+      <div class="mb-3">
+        <label for="jumlahPersonil">Jumlah (Otomatis)</label>
+        <input type="number" id="jumlahPersonil" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label for="hadir">Hadir</label>
+        <input
+          type="number"
+          id="hadir"
+          value="7"
+          oninput="updateKeterangan()"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="keterangan">Keterangan (Otomatis)</label>
+        <input type="text" id="keterangan" value="Hadir Lengkap" />
+      </div>
+
+      <!-- PERSONIL DETAIL -->
+      <div class="section">
+        <h4>Detail Personil</h4>
+
+        <div class="mb-3">
+          <label for="karupam">Karupam</label>
+          <input type="text" id="karupam" value="Sdr. Maryoto" />
+        </div>
+
+        <div class="mb-3">
+          <label for="wakarupam">Wakarupam</label>
+          <input type="text" id="wakarupam" value="Sdr. Johan Bintara" />
+        </div>
+
+        <div class="mb-3">
+          <label for="p2u_list">Daftar P2U (pisahkan dengan koma)</label>
+          <textarea id="p2u_list" rows="2">
+Sdr. M. Ade Purwadi, Sdr. Ahmad Latif</textarea
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="petugas_blok_bc"
+            >Petugas Blok B dan C (pisahkan dengan koma)</label
+          >
+          <textarea id="petugas_blok_bc" rows="2">
+Sdr. Ario, Sdr. Rafi, Sdr. Adib</textarea
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="petugas_blok_def"
+            >Petugas Blok D, E dan F (pisahkan dengan koma)</label
+          >
+          <textarea id="petugas_blok_def" rows="2">Sdr. Johan Bintara</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="petugas_menara2"
+            >Petugas Pos Menara 2 (pisahkan dengan koma)</label
+          >
+          <textarea id="petugas_menara2" rows="2">
+Sdr. Adib, Sdr. Ario, Sdr. Rafi</textarea
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="petugas_menara4"
+            >Petugas Pos Menara 4 (pisahkan dengan koma)</label
+          >
+          <textarea id="petugas_menara4" rows="2">
+Sdr. Rafi, Sdr. Adib, Sdr. Ario</textarea
+          >
+        </div>
+
+        <div class="mb-3 input-container">
+          <label for="pengawas_umum">Pengawas Umum</label>
+          <input
+            type="text"
+            id="pengawas_umum"
+            value="Bp. Cendy"
+            autocomplete="off"
+          />
+          <div
+            id="pengawas_umum-autocomplete-list"
+            class="autocomplete-items"
+          ></div>
+        </div>
+
+        <div class="mb-3 input-container">
+          <label for="piket_perwira">Piket Perwira</label>
+          <input
+            type="text"
+            id="piket_perwira"
+            value="Bp. Satria Agung W"
+            autocomplete="off"
+          />
+          <div
+            id="piket_perwira-autocomplete-list"
+            class="autocomplete-items"
+          ></div>
+        </div>
+
+        <div class="mb-3 input-container">
+          <label for="piket_staf_malam">Piket Staf Malam</label>
+          <input
+            type="text"
+            id="piket_staf_malam"
+            value="Sdr. Lintang Nur F"
+            autocomplete="off"
+          />
+          <div
+            id="piket_staf_malam-autocomplete-list"
+            class="autocomplete-items"
+          ></div>
+        </div>
+      </div>
+
+      <!-- INVENTARIS -->
+      <div class="section">
+        <h3>C. Inventaris Pengamanan</h3>
+
+        <div class="mb-3">
+          <label for="pistol">Pistol</label>
+          <input type="number" id="pistol" value="1" />
+        </div>
+
+        <div class="mb-3">
+          <label for="peluru_pistol">Peluru Pistol</label>
+          <input type="number" id="peluru_pistol" value="9" />
+        </div>
+
+        <div class="mb-3">
+          <label for="magasin">Magasin</label>
+          <input type="number" id="magasin" value="2" />
+        </div>
+
+        <div class="mb-3">
+          <label for="ht">Pesawat HT</label>
+          <input type="number" id="ht" value="6" />
+        </div>
+
+        <div class="mb-3">
+          <label for="tongkat_phh">Tongkat PHH</label>
+          <input type="number" id="tongkat_phh" value="3" />
+        </div>
+
+        <div class="mb-3">
+          <label for="metal_detector">Metal Detector</label>
+          <input type="number" id="metal_detector" value="2" />
+        </div>
+
+        <div class="mb-3">
+          <label for="apar">Apar</label>
+          <input type="number" id="apar" value="6" />
+        </div>
+
+        <div class="mb-3">
+          <label for="meja_kursi">Meja, Kursi</label>
+          <input type="number" id="meja_kursi" value="2" />
+        </div>
+
+        <div class="mb-3">
+          <label for="payung">Payung</label>
+          <input type="number" id="payung" value="4" />
+        </div>
+
+        <div class="mb-3">
+          <label for="jas_hujan">Jas Hujan</label>
+          <input type="number" id="jas_hujan" value="4" />
+        </div>
+
+        <div class="mb-3">
+          <label for="senter">Senter</label>
+          <input type="number" id="senter" value="4" />
+        </div>
+
+        <div class="mb-3">
+          <label for="speaker_toa">Speaker/TOA</label>
+          <input type="number" id="speaker_toa" value="1" />
+        </div>
+
+        <div class="mb-3">
+          <label for="lonceng">Lonceng</label>
+          <input type="number" id="lonceng" value="4" />
+        </div>
+
+        <div class="mb-3">
+          <label for="sepatu_boot">Sepatu Boot</label>
+          <input type="number" id="sepatu_boot" value="3" />
+        </div>
+
+        <div class="mb-3">
+          <label for="pepper_spray">Pepper Spray</label>
+          <input type="number" id="pepper_spray" value="2" />
+        </div>
+      </div>
+
+      <button onclick="generateLaporan()">Generate Laporan</button>
+
+      <pre id="output"></pre>
+
+      <!-- Container untuk tombol copy -->
+      <div class="copy-button-container">
+        <button id="copyButton" onclick="copyToClipboard()">
+          Copy Laporan
+        </button>
+      </div>
     </div>
-    
-    <script type="text/javascript">
-        //<![CDATA[
-        $(document).on('click', '.send_form', function () {
-            var input_blanter = document.getElementById('tanggal');
-            /* Whatsapp Settings */
-            var walink = 'https://web.whatsapp.com/send',
-                phone = '',
-                walink2 = 'Halo saya ingin Memesan ',
-                text_yes = 'Terkirim.',
-                text_no = 'Isi semua Formulir lalu klik Send.';
-    
-            /* Smartphone Support */
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                var walink = 'whatsapp://send';
+
+    <script>
+      function formatTanggalIndonesia(date) {
+        const hari = [
+          "Minggu",
+          "Senin",
+          "Selasa",
+          "Rabu",
+          "Kamis",
+          "Jumat",
+          "Sabtu",
+        ];
+        const bulan = [
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
+        ];
+
+        const d = new Date(date);
+        return `${hari[d.getDay()]}, ${String(d.getDate()).padStart(2, "0")} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+      }
+
+      // Set tanggal default ke hari ini
+      document.getElementById("tanggal").valueAsDate = new Date();
+
+      // Data personil berdasarkan rupam
+      const personilData = {
+        "Rupam I": {
+          karupam: "Sdr. Dodi Saptiyanto",
+          wakarupam: "Sdr. Imam Fauzi",
+          p2u_list: "Sdr. Achsanu Amala, Sdr. M. Aeni Sofyan",
+        },
+        "Rupam II": {
+          karupam: "Sdr. Maryoto",
+          wakarupam: "Sdr. Johan Bintara",
+          p2u_list: "Sdr. M. Ade Purwadi, Sdr. Ahmad Latif",
+        },
+        "Rupam III": {
+          karupam: "Sdr. Wahana",
+          wakarupam: "Sdr. Agung Feby. S",
+          p2u_list: "Sdr. Iqbal Zufroni, Sdr. Teguh Slamet",
+        },
+        "Rupam IV": {
+          karupam: "Sdr. Haryono",
+          wakarupam: "Sdr. Praditya Febriadi. P",
+          p2u_list: "Sdr. Umar Hakim, Sdr. Caputra",
+        },
+      };
+
+      // Data untuk autocomplete
+      const pengawasUmumData = [
+        "Fanny Yusuf Irawan (Kasi Adm Kamtib)",
+        "D Ardhyna Bintara (Kasubag TU)",
+        "Cendy (Ka KPLP)",
+        "Mu'ammar Fihri (Kasi Binadik)",
+      ];
+
+      const perwiraData = [
+        "Windu Ari Agung, S.H. (Kasubsi Peltatib)",
+        "Indarto Adiputra, S.H. (Kasubsi Perawatan)",
+        "Amin Aunur Rofiq, S.P. (Kaur Umum)",
+        "Ardhyan Bangun R., S.H. (Kaur Kepeg & Keu)",
+        "Rizal Eka PM., S.H. (Kasubsi Giatja)",
+        "Satria Agung Wibowo (Kasubsi Registrasi)",
+        "Desdy Purwanto, S.H. (Kasubsi Keamanan)",
+      ];
+
+      const stafData = [
+        "Daffa Bagos Marsekal",
+        "Ifal Khoiril",
+        "Hendra Surya A. G",
+        "Lintang Nur Faqih",
+        "Dodi Sam Yusuf",
+        "Sofyan Ali",
+        "Anggit Febianto",
+        "Lafran Dwi Wijayanto",
+        "Khaidar Ruzaki",
+        "Tirta Aji Kumbara",
+        "Zihan Sendiko Ap",
+        "David Tri Wicaksono",
+        "M. Aditya Nugratama",
+        "M. Alfin Muhsinin",
+        "M. Irfan Nuddin",
+        "Ali Mashadi",
+        "Rahmad Firmansyah",
+        "Maulana Zuhri",
+        "Rafa Adi",
+      ];
+
+      function autocomplete(inp, arr) {
+        let currentFocus;
+
+        inp.addEventListener("input", function (e) {
+          closeAllLists();
+          let val = this.value;
+          if (!val) {
+            return false;
+          }
+
+          currentFocus = -1;
+          let div = document.createElement("DIV");
+          div.setAttribute("id", this.id + "-autocomplete-list");
+          div.setAttribute("class", "autocomplete-items");
+          this.parentNode.appendChild(div);
+
+          for (let i = 0; i < arr.length; i++) {
+            if (
+              arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()
+            ) {
+              let b = document.createElement("DIV");
+              b.innerHTML =
+                "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+              b.innerHTML += arr[i].substr(val.length);
+              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              b.addEventListener("click", function (e) {
+                inp.value = this.getElementsByTagName("input")[0].value;
+                closeAllLists();
+              });
+              div.appendChild(b);
             }
-    
-            if ("" != input_blanter.value) {
-    
-                /* Call Input Form */
-                var input_tanggal =$("#tanggal ").val(),
-                input_dariRupam=$("#dariRupam").val(),
-                input_kepadaRupam=$("#kepadaRupam").val(),
-                input_jumlahTahanan=$("#jumlahTahanan").val(),
-                input_jumlahNarapidana=$("#jumlahNarapidana").val(),
-                input_totalDidalam=$("#totalDidalam").val(),
-                input_jumlahTahananDiluar=$("#jumlahTahananDiluar").val(),
-                input_jumlahNarapidanaDiluar=$("#jumlahNarapidanaDiluar").val(),
-                input_totalDiluar=$("#totalDiluar").val(),
-                input_grandTotal=$("#grandTotal").val(),
-                input_jumlahRupam=$("#jumlahRupam").val(),
-                input_P2U=$("#P2U").val(),
-                input_totalRupam=$("#totalRupam").val(),
-                input_kehadiranRupam=$("#kehadiranRupam").val(),
-                input_keteranganRupam=$("#keteranganRupam").val(),
-                input_pengawasUmum=$("#pengawasUmum").val(),
-                input_KaRupam=$("#KaRupam").val(),
-                input_WakaRupam=$("#WakaRupam").val(),
-                input_P2Utugas=$("#P2Utugas").val(),
-                input_Menara1=$("#Menara1").val(),
-                input_Menara3=$("#Menara3").val(),
-                input_BlokBC=$("#BlokBC").val(),
-                input_BlokDEF=$("#BlokDEF").val(),
-                input_Wasrik=$("#Wasrik").val(),
-                input_piketPerwira=$("#piketPerwira").val(),
-                input_piketStaf=$("#piketStaf").val(),
-                input_pistol=$("#pistol").val(),
-                input_peluru=$("#peluru").val(),
-                input_magezine=$("#magezine").val(),
-                input_HT=$("#HT").val(),
-                input_tongkatPHH=$("#tongkatPHH").val(),
-                input_metalDetector=$("#metalDetector").val(),
-                input_apar=$("#apar").val(),
-                input_mejaKursi=$("#mejaKursi").val(),
-                input_payung=$("#payung").val(),
-                input_jasHujan=$("#jasHujan").val(),
-                input_senter=$("#senter").val(),
-                input_speakerTOA=$("#speakerTOA").val(),
-                input_lonceng=$("#lonceng").val(),
-                input_sepatuBoot=$("#sepatuBoot").val(),
-                input_pepperSpray=$("#pepperSpray").val();
-    
-    
-    
-                /* Final Whatsapp URL */
-                var blanter_whatsapp = walink + '?phone=' + phone + '&text=' + '%0A%0A' +
-                    '*ASTEKPAM MALAM LAPAS KELAS IIB BATANG* ' + '%0A' +
-                    '_' + input_tanggal  + '_' + '%0A' +
-                    ' ' + '%0A' +
-                    'Mohon ijin melaporkan Astekpam dari ' + input_dariRupam + ' (Siang) Ke ' + input_kepadaRupam + ' (Malam) berjalan dengan aman, tertib dan lengkap. Dengan rincian sbb :' + '%0A' +
-                    '%0A' +
-                    '*A. JUMLAH PENGHUNI* ' + '%0A' +
-                    '```1. Penghuni di dalam Lapas ' + '%0A' +
-                    '    • Tahanan      = ' + input_jumlahTahanan + ' Orang' + '%0A' +
-                    '    • Narapidana   = ' + input_jumlahNarapidana + ' Orang' + '%0A' +
-                    '    ---------------------- ' + '%0A' +
-                    '    Jumlah         = ' + input_totalDidalam + ' Orang' + '%0A' +
-                    ' ' + '%0A' +
-                    '2. Penghuni di luar Lapas' + '%0A' +
-                    '    • Tahanan      = ' + input_jumlahTahananDiluar + ' Orang' + '%0A' +
-                    '    • Narapidana   = ' + input_jumlahNarapidanaDiluar + ' Orang' + '%0A' +
-                    '    ---------------------- ' + '%0A' +
-                    '    Jumlah         = ' + input_totalDiluar + ' Orang' + '%0A' +
-                    '  ' + '%0A' +
-                    '3. Jumlah Total Penghuni' + '%0A' +
-                    '    Jumlah         = ' + input_grandTotal + ' Orang```' + '%0A' +
-                    '  ' + '%0A' +
-                    '  ' + '%0A' +
-                    '*B. PERSONIL PENGAMANAN*' + '%0A' +
-                    '```    Rupam          = ' + input_jumlahRupam + ' Orang' + '%0A' +
-                    '    P2U            = ' + input_P2U + ' Orang' + '%0A' +
-                    '    ---------------------- ' + '%0A' +
-                    '    Jumlah         = ' + input_totalRupam + ' Orang' + '%0A' +
-                    '    Hadir          = ' + input_kehadiranRupam + ' Orang' + '%0A' +
-                    '    Keterangan' + '%0A' +
-                    '    ' + input_keteranganRupam + '```' + '%0A' +
-                    ' ' + '%0A' +      
-                    ' ' + '%0A' +
-                    '*C. PEMBAGIAN TUGAS*' + '%0A' +
-                    '```Ka Rupam       = ' + input_KaRupam +'%0A' +
-                    'Waka Rupam     = ' + input_WakaRupam + '%0A' +
-                    'P2U            = ' + input_P2Utugas + '%0A' +
-                    '---------------------- ' + '%0A' +
-                    'Pos Menara 1   = ' + '%0A' +
-                    '' + input_Menara1 + '' + '%0A' +
-                    '---------------------- ' + '%0A' +
-                    'Pos Menara 3   = ' + '%0A' +
-                    '' + input_Menara3 + '' + '%0A' +
-                    '---------------------- ' + '%0A' +
-                    'Pos Blok B dan C = ' + '%0A' +
-                    '' + input_BlokBC + '' + '%0A' +
-                    '---------------------- ' + '%0A' +
-                    'Pos Blok D,E dan F = ' + '%0A' +
-                    '' + input_BlokDEF + '' + '%0A' +
-                    '---------------------- ' + '%0A' +
-                    'Pos Wasrik     = ' + '%0A' +
-                    '' + input_Wasrik + '%0A' +
-                    '---------------------- ```' + '%0A' +
-                    ' ' + '%0A' +              
-                    '_PENGAWAS UMUM_' + '%0A' +
-                    '' + input_pengawasUmum + '' + '%0A' +
-                    ' ' + '%0A' +
-                    '_PIKET PERWIRA_' + '%0A' +
-                    '' + input_piketPerwira + '' + '%0A' +
-                    ' ' + '%0A' +
-                    '_PIKET STAFF_' + '%0A' +
-                    '' + input_piketStaf + '' + '%0A' +
-                    ' ' + '%0A' +
-                    ' ' + '%0A' +
-                    '*D. INVENTARIS PENGAMANAN*' + '%0A' +
-                    '```    • Pistol        = ' + input_pistol + ' Pucuk' + '%0A' +
-                    '    • Peluru Pistol = ' + input_peluru + ' Butir' + '%0A' +
-                    '    • Magazine      = ' + input_magezine + ' Buah' + '%0A' +
-                    '    • Pesawat HT    = ' + input_HT + ' Buah' + '%0A' +
-                    '    • Tongkat PHH   = ' + input_tongkatPHH + ' Buah' + '%0A' +
-                    '    • Metal Detector= ' + input_metalDetector + ' Buah' + '%0A' +
-                    '    • Apar          = ' + input_apar + ' Buah' + '%0A' +
-                    '    • Meja,Kursi    = ' + input_mejaKursi + ' Buah' + '%0A' +
-                    '    • Payung        = ' + input_payung + ' Buah' + '%0A' +
-                    '    • Jas Hujan     = ' + input_jasHujan + ' Buah' + '%0A' +
-                    '    • Senter        = ' + input_senter + ' Buah' + '%0A' +
-                    '    • Speaker/TOA   = ' + input_speakerTOA + ' Buah' + '%0A' +
-                    '    • Lonceng       = ' + input_lonceng + ' Buah' + '%0A' +
-                    '    • Sepatu Boot   = ' + input_sepatuBoot + ' Buah' + '%0A' +
-                    '    • Pepper Spray  = ' + input_pepperSpray + ' Buah```' + '%0A' +    
-                    ' ' + '%0A' +    
-                    'Inventaris dalam keadaan lengkap dan baik.' + '%0A' +    
-                    'Situasi Lapas dalam keadaan aman dan kondusif.' + '%0A' +                    
-                    '*Do The Best and Always The Best*' + '%0A';
-    
-                /* Whatsapp Window Open */
-                window.open(blanter_whatsapp, '_blank');
-                document.getElementById("text-info").innerHTML = '<span class="yes">' + text_yes + '</span>';
-            } else {
-                document.getElementById("text-info").innerHTML = '<span class="no">' + text_no + '</span>';
-            }
+          }
         });
-    //]]>
+
+        inp.addEventListener("keydown", function (e) {
+          let x = document.getElementById(this.id + "-autocomplete-list");
+          if (x) x = x.getElementsByTagName("div");
+          if (e.keyCode == 40) {
+            // Arrow Down
+            currentFocus++;
+            addActive(x);
+          } else if (e.keyCode == 38) {
+            // Arrow Up
+            currentFocus--;
+            addActive(x);
+          } else if (e.keyCode == 13) {
+            // Enter
+            e.preventDefault();
+            if (currentFocus > -1) {
+              if (x) x[currentFocus].click();
+            }
+          }
+        });
+
+        function addActive(x) {
+          if (!x) return false;
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = x.length - 1;
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+          for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+
+        function closeAllLists(elmnt) {
+          let x = document.getElementsByClassName("autocomplete-items");
+          for (let i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+            }
+          }
+        }
+
+        document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+        });
+      }
+
+      function updatePersonilFromRupam() {
+        const rupamValue = document.getElementById("kerupam").value;
+        const data = personilData[rupamValue];
+
+        if (data) {
+          document.getElementById("karupam").value = data.karupam;
+          document.getElementById("wakarupam").value = data.wakarupam;
+          document.getElementById("p2u_list").value = data.p2u_list;
+        }
+      }
+
+      function updateTotalPenghuni() {
+        const tahananDalam =
+          +document.getElementById("tahananDalam").value || 0;
+        const napiDalam = +document.getElementById("napiDalam").value || 0;
+        const tahananLuar = +document.getElementById("tahananLuar").value || 0;
+        const napiLuar = +document.getElementById("napiLuar").value || 0;
+
+        const jumlahDalamLapas = tahananDalam + napiDalam;
+        const jumlahDiLuarLapas = tahananLuar + napiLuar;
+        const totalPenghuni = jumlahDalamLapas + jumlahDiLuarLapas;
+
+        document.getElementById("jumlahDalamLapas").value = jumlahDalamLapas;
+        document.getElementById("jumlahDiLuarLapas").value = jumlahDiLuarLapas;
+        document.getElementById("totalPenghuni").value = totalPenghuni;
+      }
+
+      function updatePersonil() {
+        const rupam = +document.getElementById("rupam").value || 0;
+        const p2u = +document.getElementById("p2u").value || 0;
+        const jumlahPersonil = rupam + p2u;
+
+        document.getElementById("jumlahPersonil").value = jumlahPersonil;
+        document.getElementById("hadir").value = jumlahPersonil; // Set hadir = jumlah otomatis
+        updateKeterangan(); // Update keterangan juga
+      }
+
+      function updateKeterangan() {
+        const jumlahPersonil =
+          +document.getElementById("jumlahPersonil").value || 0;
+        const hadir = +document.getElementById("hadir").value || 0;
+
+        if (jumlahPersonil === hadir && jumlahPersonil > 0) {
+          document.getElementById("keterangan").value = "Hadir Lengkap";
+        } else if (jumlahPersonil > 0) {
+          document.getElementById("keterangan").value = "Hadir Sebagian"; // Atau sesuaikan dengan kebutuhan
+        } else {
+          document.getElementById("keterangan").value = "";
+        }
+      }
+
+      // Inisialisasi autocomplete untuk input terkait
+      document.addEventListener("DOMContentLoaded", function () {
+        autocomplete(
+          document.getElementById("pengawas_umum"),
+          pengawasUmumData,
+        );
+        autocomplete(document.getElementById("piket_perwira"), perwiraData);
+        autocomplete(document.getElementById("piket_staf_malam"), stafData);
+      });
+
+      // Panggil fungsi saat halaman dimuat untuk inisialisasi
+      updatePersonilFromRupam(); // Inisialisasi personil berdasarkan default rupam
+      updateTotalPenghuni();
+      updatePersonil();
+
+      function generateLaporan() {
+        const tgl = formatTanggalIndonesia(
+          document.getElementById("tanggal").value,
+        );
+
+        const darirupam = document.getElementById("darirupam").value;
+        const kerupam = document.getElementById("kerupam").value;
+
+        const tahananDalam =
+          +document.getElementById("tahananDalam").value || 0;
+        const napiDalam = +document.getElementById("napiDalam").value || 0;
+        const tahananLuar = +document.getElementById("tahananLuar").value || 0;
+        const napiLuar = +document.getElementById("napiLuar").value || 0;
+
+        const jumlahDalamLapas =
+          +document.getElementById("jumlahDalamLapas").value || 0;
+        const jumlahDiLuarLapas =
+          +document.getElementById("jumlahDiLuarLapas").value || 0;
+        const totalPenghuni =
+          +document.getElementById("totalPenghuni").value || 0;
+
+        const rupam = +document.getElementById("rupam").value || 0;
+        const p2u = +document.getElementById("p2u").value || 0;
+        const jumlahPersonil =
+          +document.getElementById("jumlahPersonil").value || 0;
+        const hadir = +document.getElementById("hadir").value || 0;
+        const keterangan = document.getElementById("keterangan").value;
+
+        // Detail personil
+        const karupam = document.getElementById("karupam").value;
+        const wakarupam = document.getElementById("wakarupam").value;
+        const p2uList = document
+          .getElementById("p2u_list")
+          .value.split(",")
+          .map((item) => item.trim())
+          .join("\n  ");
+        const petugasBlokBC = document
+          .getElementById("petugas_blok_bc")
+          .value.split(",")
+          .map((item) => item.trim())
+          .join(" > ");
+        const petugasBlokDEF = document
+          .getElementById("petugas_blok_def")
+          .value.split(",")
+          .map((item) => item.trim())
+          .join(" > ");
+        const petugasMenara2 = document
+          .getElementById("petugas_menara2")
+          .value.split(",")
+          .map((item) => item.trim())
+          .join(" > ");
+        const petugasMenara4 = document
+          .getElementById("petugas_menara4")
+          .value.split(",")
+          .map((item) => item.trim())
+          .join(" > ");
+        const pengawasUmum = document.getElementById("pengawas_umum").value;
+        const piketPerwira = document.getElementById("piket_perwira").value;
+        const piketStafMalam =
+          document.getElementById("piket_staf_malam").value;
+
+        // Inventaris
+        const pistol = +document.getElementById("pistol").value || 0;
+        const peluruPistol =
+          +document.getElementById("peluru_pistol").value || 0;
+        const magasin = +document.getElementById("magasin").value || 0;
+        const ht = +document.getElementById("ht").value || 0;
+        const tongkatPhh = +document.getElementById("tongkat_phh").value || 0;
+        const metalDetector =
+          +document.getElementById("metal_detector").value || 0;
+        const apar = +document.getElementById("apar").value || 0;
+        const mejaKursi = +document.getElementById("meja_kursi").value || 0;
+        const payung = +document.getElementById("payung").value || 0;
+        const jasHujan = +document.getElementById("jas_hujan").value || 0;
+        const senter = +document.getElementById("senter").value || 0;
+        const speakerToa = +document.getElementById("speaker_toa").value || 0;
+        const lonceng = +document.getElementById("lonceng").value || 0;
+        const sepatuBoot = +document.getElementById("sepatu_boot").value || 0;
+        const pepperSpray = +document.getElementById("pepper_spray").value || 0;
+
+        const laporan = `
+*ASTEKPAM MALAM LAPAS KELAS IIB BATANG*
+${tgl}
+
+Mohon ijin melaporkan Astekpam dari ${darirupam} Siang Ke ${kerupam} Malam berjalan dengan aman, tertib dan lengkap. Dengan rincian sbb :
+
+*A. JUMLAH PENGHUNI*
+    \`\`\`1. Penghuni di dalam Lapas
+    • Tahanan      = ${tahananDalam} Orang
+    • Narapidana   = ${napiDalam} Orang
+    ---------------------- 
+    Jumlah         = ${jumlahDalamLapas} Orang
+
+2. Penghuni di luar Lapas
+    • Tahanan      = ${tahananLuar} Orang
+    • Narapidana   = ${napiLuar} Orang
+    ---------------------- 
+    Jumlah         = ${jumlahDiLuarLapas} Orang
+  
+3. Jumlah Total Penghuni
+    Jumlah         = ${totalPenghuni} Orang\`\`\`
+
+*B. PERSONIL PENGAMANAN*
+    \`\`\`  Rupam          = ${rupam} Orang
+    P2U            = ${p2u} Orang
+    ---------------------- 
+    Jumlah         = ${jumlahPersonil} Orang
+    Hadir          = ${hadir} Orang
+
+    Keterangan
+    ${keterangan}\`\`\`
+
+Karupam
+${karupam} 
+
+Wakarupam
+${wakarupam}
+
+P2U
+${p2uList}
+
+Petugas Blok B dan C
+${petugasBlokBC}
+
+Petugas Blok D, E dan F
+${petugasBlokDEF}
+
+Petugas Pos menara 2
+${petugasMenara2}
+
+Petugas Pos menara 4
+${petugasMenara4}
+
+Pengawas Umum
+${pengawasUmum}
+
+Piket Perwira
+${piketPerwira}
+
+Piket Staf Malam
+${piketStafMalam}
+
+*C. INVENTARIS PENGAMANAN*
+    \`\`\`  • Pistol        = ${pistol} Pucuk
+    • Peluru Pistol = ${peluruPistol} Butir
+    • Magasin       = ${magasin} Buah
+    • Pesawat HT    = ${ht} Buah
+    • Tongkat PHH   = ${tongkatPhh} Buah
+    • Metal Detector= ${metalDetector} Buah
+    • Apar          = ${apar} Buah
+    • Meja,Kursi    = ${mejaKursi} Buah
+    • Payung        = ${payung} Buah
+    • Jas Hujan     = ${jasHujan} Buah
+    • Senter        = ${senter} Buah
+    • Speaker/TOA   = ${speakerToa} Buah
+    • Lonceng       = ${lonceng} Buah
+    • Sepatu Boot   = ${sepatuBoot} Buah
+    • Pepper Spray  = ${pepperSpray} Buah\`\`\`
+
+Inventaris dalam keadaan lengkap dan baik.
+Situasi Lapas dalam keadaan aman dan kondusif.
+Do The Best and Always The Best
+`;
+
+        document.getElementById("output").textContent = laporan;
+      }
+
+      // Fungsi untuk menyalin teks dari elemen <pre>
+      function copyToClipboard() {
+        const outputElement = document.getElementById("output");
+        const textToCopy = outputElement.textContent;
+
+        if (!textToCopy) {
+          alert("Tidak ada laporan untuk disalin.");
+          return;
+        }
+
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            // Berhasil disalin
+            const btn = document.getElementById("copyButton");
+            const originalText = btn.textContent;
+            btn.textContent = "Copied!";
+            setTimeout(() => {
+              btn.textContent = originalText;
+            }, 2000); // Ubah teks kembali setelah 2 detik
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+            alert(
+              "Gagal menyalin teks. Silakan coba lagi atau salin secara manual.",
+            );
+          });
+      }
     </script>
-    
-    </body>
-    
-    </HTML>
+  </body>
+</html>
