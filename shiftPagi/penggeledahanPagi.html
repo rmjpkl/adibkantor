@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Generator Laporan Atensi Pimpinan</title>
+<style>
+body {
+  font-family: "Times New Roman", serif;
+  background: #f4f6f8;
+  padding: 20px;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+}
+h2 {
+  text-align: center;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 12px;
+}
+input, textarea, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-family: inherit;
+}
+textarea {
+  min-height: 90px;
+}
+button {
+  margin-top: 15px;
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background: #1565c0;
+}
+.copy-btn {
+  background: #2e7d32;
+}
+.copy-btn:hover {
+  background: #1b5e20;
+}
+.output textarea {
+  min-height: 420px;
+  white-space: pre-wrap;
+}
+.row {
+  display: flex;
+  gap: 10px;
+}
+.row input {
+  flex: 1;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Form Laporan Atensi Pimpinan</h2>
+
+<!-- HARI & TANGGAL -->
+<label>Hari</label>
+<input type="text" id="hari">
+
+<label>Tanggal</label>
+<input type="text" id="tanggal">
+
+<!-- JAM -->
+<label>Jam Pelaksanaan</label>
+<div class="row">
+  <input type="text" id="jamAwal" placeholder="Jam Mulai (contoh: 16.30)">
+  <input type="text" id="jamAkhir" placeholder="Jam Selesai (contoh: 16.45)">
+</div>
+
+<label>Blok / Wisma</label>
+<input list="blokList" id="blok">
+<datalist id="blokList">
+  <option value="Wisma Anggrek">
+  <option value="Wisma Bougenville">
+  <option value="Wisma Claudia">
+  <option value="Wisma Dahlia">
+  <option value="Wisma Edelweis">
+  <option value="Wisma Flamboyan">
+</datalist>
+
+<label>Kamar</label>
+<input type="text" id="kamar" placeholder="Contoh: Kamar 1 dan 2">
+
+<label>Anggota Penggeledahan</label>
+<textarea id="anggota">1. Karupam
+2. Anggota Jaga</textarea>
+
+<label>Sajam</label>
+<input type="text" id="sajam" value="NIHIL">
+
+<label>HP</label>
+<input type="text" id="hp" value="NIHIL">
+
+<label>Narkotika</label>
+<input type="text" id="narkoba" value="NIHIL">
+
+<label>Elektronik</label>
+<input type="text" id="elektronik" value="NIHIL">
+
+<label>Lainnya</label>
+<input type="text" id="lainnya" value="NIHIL">
+
+<button onclick="generate()">Generate Laporan</button>
+
+<div class="output">
+<label>Hasil Laporan</label>
+<textarea id="hasil"></textarea>
+<button class="copy-btn" onclick="copyText()">📋 Copy Laporan</button>
+</div>
+</div>
+
+<script>
+const hariArr = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const bulanArr = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+function initTanggal() {
+  const d = new Date();
+  document.getElementById("hari").value = hariArr[d.getDay()];
+  document.getElementById("tanggal").value =
+    String(d.getDate()).padStart(2,"0") + " " +
+    bulanArr[d.getMonth()] + " " +
+    d.getFullYear();
+}
+
+function generate() {
+  const hari = document.getElementById("hari").value;
+  const tanggal = document.getElementById("tanggal").value;
+  const jamAwal = document.getElementById("jamAwal").value;
+  const jamAkhir = document.getElementById("jamAkhir").value;
+  const blok = document.getElementById("blok").value;
+  const kamar = document.getElementById("kamar").value;
+  const anggota = document.getElementById("anggota").value;
+
+  const sajam = document.getElementById("sajam").value;
+  const hp = document.getElementById("hp").value;
+  const narkoba = document.getElementById("narkoba").value;
+  const elektronik = document.getElementById("elektronik").value;
+  const lainnya = document.getElementById("lainnya").value;
+
+  const laporan = `*LAPORAN ATENSI PIMPINAN*
+
+Kepada,
+Yth.
+1. Direktur Jenderal Pemasyarakatan
+2. KAKANWIL DITJEN PAS Jawa Tengah
+
+Dari :
+Kepala Lapas Kelas IIB Batang
+
+*I. PERISTIWA/ KEJADIAN*
+Pelaksanaan razia/sidak ${blok} ${kamar} pada Lapas Kelas IIB Batang.
+
+*II. URAIAN/ PERISTIWA/ KEJADIAN*
+A. DASAR
+1. UU RI Nomor 22 Tahun 2022 Tentang Pemasyarakatan;
+2. Permenkum HAM No. 8 Tahun 2024 tentang penyelenggaraan keamanan dan ketertiban pada satuan kerja Pemasyarakatan;
+
+B. Pada hari ini, ${hari}, ${tanggal} mulai pukul ${jamAwal} s/d ${jamAkhir} WIB, Tim penggeledahan Lapas Kelas IIB Batang melaksanakan razia/sidak dan pemeriksaan instalasi listrik di ${blok} ${kamar}.
+
+C. Razia/sidak dan pemeriksaan instalasi listrik dilaksanakan sesuai perintah Ka. Lapas untuk meminimalisir benda/barang larangan berupa jaringan liar, stop kontak, HP, Narkoba dan SAJAM.
+
+D. Razia/penggeledahan diikuti :
+${anggota}
+
+E. Hasil razia/sidak petugas menemukan benda/barang larangan berupa :
+1. Sajam        : ${sajam}
+2. Hp              : ${hp}
+3. Narkoba     : ${narkoba}
+4. Elektronik   : ${elektronik}
+5. Lainnya      : ${lainnya}
+
+*III. SARAN TINDAK LANJUT*
+1. Barang bukti hasil razia diinventarisir dan didata.
+2. Barang bukti hasil razia diamankan / dimusnahkan.
+3. Ka. Lapas melaporkan pelaksanaan razia kepada Kakanwil Ditjen Pas Jateng.
+4. Pelaksanaan razia berjalan dengan aman, tertib dan lancar.
+
+*IV. PENUTUP*
+Demikian laporan yang dapat kami sampaikan, selanjutnya mohon petunjuk dan arahan.
+
+${hari}, ${tanggal}
+Kepala Lapas Batang
+
+Nurhamdan
+
+Tembusan Kepada Yth. :
+Direktur Jenderal Pemasyarakatan
+Cq. Direktur Pengamanan dan Intelijen Ditjen Pas`;
+
+  document.getElementById("hasil").value = laporan;
+}
+
+function copyText() {
+  const t = document.getElementById("hasil");
+  t.select();
+  document.execCommand("copy");
+  alert("Laporan berhasil disalin ✅");
+}
+
+initTanggal();
+</script>
+
+</body>
+</html>
