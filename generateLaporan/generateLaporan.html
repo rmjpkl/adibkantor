@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Report Generator - Lapas Batang</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
+      .textarea-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+        font-size: 15px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: "Courier New", Courier, monospace;
+        resize: vertical;
+        transition: all 0.3s ease;
+      }
+      .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 15px;
+      }
+      .btn-combine {
+        background: #667eea;
+        color: white;
+      }
+      .btn-ai {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        font-size: 18px;
+      }
+      .btn-ai:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      .loader {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid #fff;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: none;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .divider {
+        height: 2px;
+        background: #eee;
+        margin: 30px 0;
+        border: none;
+      }
+      .btn-copy {
+        background: #f3f4f6;
+        color: #4b5563;
+        border: 1px solid #d1d5db;
+        width: auto;
+        padding: 8px 15px;
+      }
+      .label-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📝 AI Report Automator</h1>
+
+      <div class="textarea-group">
+        <label for="textarea1">1. Instruksi & Format Laporan:</label>
+        <textarea id="textarea1">
+saya memiliki contoh laporan sebagai berikut  
+
+"
+*LAPORAN ATENSI PIMPINAN*
+Kepada,
+Yth.
+1. Direktur Jenderal Pemasyarakatan
+2. Kakanwil Direktorat Jenderal Pemasyarakatan Jawa Tengah
+Dari :
+Kepala Lapas Kelas IIB Batang
+
+*I. PERISTIWA / KEJADIAN*
+Pelaksanaan tugas Regu Pengamanan Shift Siang pada Lapas Kelas IIB Batang.
+
+*II. DASAR*
+1. Undang-Undang Republik Indonesia Nomor 22 Tahun 2022 tentang Pemasyarakatan;
+2. Peraturan Menteri Hukum dan HAM RI Nomor 8 Tahun 2024 tentang Penyelenggaraan Keamanan dan Ketertiban pada Satuan Kerja Pemasyarakatan.
+
+*III. URAIAN / PERISTIWA / KEJADIAN*
+1. Pengecekan jumlah penghuni Lapas Kelas IIB Batang sebanyak 485 orang, terdiri dari 82 orang tahanan dan 403 orang narapidana, seluruhnya berada di dalam Lapas. (Pukul 12.45)
+2. Serah terima tugas Regu Pengamanan dari Rupam III Pagi kepada Rupam II Siang berjalan aman, tertib, dan lengkap. (Pukul 13.00)
+3. Apel dan pengecekan personil Regu Pengamanan Shift Siang dengan kekuatan 7 orang, hadir 6 orang, keterangan Sdr. Johan Bintara sakit. (Pukul 13.00)
+4. Pengecekan inventaris pengamanan berupa senjata api, amunisi, alat komunikasi, dan sarana pendukung lainnya dalam keadaan lengkap dan baik. (Pukul 13.10)
+5. Kegiatan latihan musik oleh warga binaan di aula Lapas berjalan aman dan tertib. (Pukul 13.35)
+6. Pembukaan pintu gerbang samping untuk memasukkan material baja ringan dengan pengawalan petugas berjalan aman. (Pukul 14.02)
+7. Kegiatan warga binaan menggunakan fasilitas telepon di Wartelsus berlangsung aman dan tertib. (Pukul 14.06)
+8. Kegiatan pengukuran tembok keliling oleh pihak PUPR dengan pendampingan Kasubag TU dan Kaur Umum berlangsung aman dengan pantauan pengamanan dari Pos Menara 1 dan Pos Menara 3. (Pukul 14.31)
+9. Pengawasan kegiatan sholat Ashar berjamaah di Masjid dengan jumlah jamaah 274 orang, berlangsung aman dan tertib. (Pukul 15.30)
+10. Pemasukan kembali 4 orang tahanan selesai sidang dengan pengawalan petugas berjalan aman. (Pukul 15.41)
+11. Pembagian jatah makan sore kepada warga binaan berjalan aman dan tertib. (Pukul 15.41)
+12. Kegiatan pembacaan Asmaul Husna oleh 67 warga binaan santri di Masjid berlangsung aman. (Pukul 15.43)
+13. Pemberian obat kepada 6 orang warga binaan di Blok B, C, dan D berjalan aman dan lengkap. (Pukul 15.48)
+14. Pemasukan kembali 11 orang warga binaan bon dengan pengawalan petugas berjalan aman. (Pukul 16.02)
+15. Razia/sidak dan pemeriksaan instalasi listrik di Wisma Claudia Kamar 1 dan 2 berlangsung aman dan terkendali, dengan hasil temuan 3 buah paku bekas. (Pukul 16.30 s.d. 16.45)
+16. Kontrol dan trolling blok hunian oleh anggota jaga berjalan aman. (Pukul 17.14)
+17. Trolling brandgang luar oleh Karupam dengan pengawasan Pos Menara 1 dan Pos Menara 3 berjalan aman. (Pukul 17.36 s.d. 17.39)
+18. Kegiatan penurunan Bendera Merah Putih berlangsung tertib dan aman. (Pukul 17.47)
+19. Pengawasan 21 warga binaan melaksanakan sholat maghrib berjamaah. (Pukul 18.15) 
+20. Pengawasan 58 wargabinaan kegiatan Maulid Al- Berjanji (Pukul 18.30)
+21. Petugasan Blok Trolling blok hunian (Pukul 18.45)
+22. Pelaksanaan tugas Regu Pengamanan Shift Siang berakhir dengan situasi Lapas Kelas IIB Batang dalam keadaan aman, tertib, dan kondusif serta dilanjutkan serah terima kepada Regu Pengamanan Shift Malam. (Pukul 19.00)
+
+
+*IV. SARAN TINDAK LANJUT*
+1. Kepala Lapas melaporkan pelaksanaan kegiatan kepada Kepala Kantor Wilayah Direktorat Jenderal Pemasyarakatan Jawa Tengah.
+2. Pengawasan dan pengendalian keamanan tetap ditingkatkan guna menjaga stabilitas keamanan dan ketertiban Lapas.
+
+*V. PENUTUP*
+Demikian laporan ini disampaikan, selanjutnya mohon petunjuk dan arahan.
+
+Batang, 02 Februari 2026
+Kepala Lapas Kelas IIB Batang
+
+
+Nurhamdan 
+"
+
+tolong buatkan laporan seperti contoh diatas  
+
+pastikan kegiatan 
+1. tentang apel pengecekan warga binaan 
+2. kegiatan astekpam atau serah terima regu pengamanan digabung dengan pengecekan personil
+
+Mohon gunakan penomoran manual (plain text). Jangan gunakan fitur auto-numbering atau bullet points otomatis. Tuliskan angka dan titik secara eksplisit di awal setiap baris (contoh: '1. Isi laporan').
+
+dengan materi berikut : </textarea
+        >
+      </div>
+
+      <div class="textarea-group">
+        <label for="textarea2">2. Data Mentah Kegiatan (Materi):</label>
+        <textarea
+          id="textarea2"
+          placeholder="Masukkan data mentah di sini..."
+        ></textarea>
+      </div>
+
+      <button class="btn btn-combine" onclick="gabungkanText()">
+        Step 1: Gabungkan Data ⬇️
+      </button>
+      <hr class="divider" />
+
+      <div class="textarea-group">
+        <label for="textarea3">3. Final Prompt:</label>
+        <textarea id="textarea3"></textarea>
+      </div>
+
+      <button class="btn btn-ai" id="btnAI" onclick="kirimKeAI()">
+        <div class="loader" id="loader"></div>
+        <span id="btnText">Step 2: ✨ Proses Laporan dengan AI</span>
+      </button>
+
+      <div class="textarea-group">
+        <div class="label-row">
+          <label style="color: #11998e; font-size: 18px"
+            >✅ Hasil Laporan:</label
+          >
+          <button class="btn btn-copy" onclick="copyResult()">📋 Salin</button>
+        </div>
+        <textarea
+          id="textareaResult"
+          style="background-color: #f9fff9; border-color: #38ef7d"
+          readonly
+        ></textarea>
+      </div>
+    </div>
+
+    <script>
+      function gabungkanText() {
+        const t1 = document.getElementById("textarea1").value;
+        const t2 = document.getElementById("textarea2").value;
+        document.getElementById("textarea3").value = t1 + "\n\n" + t2;
+      }
+
+      async function kirimKeAI() {
+        const promptText = document.getElementById("textarea3").value;
+        const resultArea = document.getElementById("textareaResult");
+        const btn = document.getElementById("btnAI");
+        const btnText = document.getElementById("btnText");
+        const loader = document.getElementById("loader");
+
+        if (!promptText.trim()) return alert("Isi data dulu!");
+
+        const API_KEY = "AIzaSyCW9xMMJiTjR48KQ40urvjCuIKr_QW-npc";
+
+        // Mencoba model terbaru sesuai dokumen Anda
+        const MODEL_NAME = "gemini-3-flash-preview";
+
+        btn.disabled = true;
+        btnText.innerText = "Menghubungi Gemini...";
+        loader.style.display = "block";
+
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }],
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.error) {
+            // Jika gemini-3 gagal (karena masih preview/limited), otomatis coba gemini-1.5-flash
+            console.warn("Model 3 gagal, mencoba model 1.5...");
+            return retryWithFlash15(promptText, API_KEY);
+          }
+
+          resultArea.value = data.candidates[0].content.parts[0].text;
+        } catch (error) {
+          resultArea.value = "Error: " + error.message;
+        } finally {
+          btn.disabled = false;
+          btnText.innerText = "Step 2: ✨ Proses Laporan dengan AI";
+          loader.style.display = "none";
+        }
+      }
+
+      async function retryWithFlash15(prompt, key) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+          });
+          const data = await response.json();
+          document.getElementById("textareaResult").value =
+            data.candidates[0].content.parts[0].text;
+        } catch (e) {
+          document.getElementById("textareaResult").value =
+            "Gagal memproses dengan model cadangan.";
+        }
+      }
+
+      function copyResult() {
+        const res = document.getElementById("textareaResult");
+        navigator.clipboard.writeText(res.value);
+        alert("Tersalin!");
+      }
+    </script>
+  </body>
+</html>
